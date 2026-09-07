@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Задачник</title>
+<style>
+  :root {
+    --bg: #f0f0f5;
+    --card: #ffffff;
+    --text: #1a1a2e;
+    --text2: #6b6b7b;
+    --text3: #a0a0b0;
+    --border: #e0e0ea;
+    --accent: #4a4a6a;
+    --good: #2ecc71;
+    --bad: #e74c3c;
+    --warn: #f39c12;
+    --shadow: 0 2px 16px rgba(0,0,0,0.07);
+    --shadow-hover: 0 6px 24px rgba(0,0,0,0.12);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Темна синя */
+  [data-theme="dark-blue"] {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f1f5f9;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --border: #334155;
+    --accent: #60a5fa;
+    --good: #4ade80;
+    --bad: #f87171;
+    --warn: #fbbf24;
+    --shadow: 0 2px 16px rgba(0,0,0,0.4);
+    --shadow-hover: 0 6px 24px rgba(0,0,0,0.5);
+  }
+
+  /* Світло-сіра */
+  [data-theme="light-gray"] {
+    --bg: #e8e8ec;
+    --card: #f5f5f7;
+    --text: #1c1c1e;
+    --text2: #636366;
+    --text3: #8e8e93;
+    --border: #d1d1d6;
+    --accent: #007aff;
+    --good: #34c759;
+    --bad: #ff3b30;
+    --warn: #ff9500;
+    --shadow: 0 2px 16px rgba(0,0,0,0.06);
+    --shadow-hover: 0 6px 24px rgba(0,0,0,0.1);
+  }
+
+  /* Кремова біла */
+  [data-theme="cream"] {
+    --bg: #faf6f0;
+    --card: #fffdf8;
+    --text: #2d2a26;
+    --text2: #8a8278;
+    --text3: #b5ada3;
+    --border: #e8e0d6;
+    --accent: #c4956a;
+    --good: #7cb342;
+    --bad: #e57373;
+    --warn: #ffb74d;
+    --shadow: 0 2px 16px rgba(45,42,38,0.06);
+    --shadow-hover: 0 6px 24px rgba(45,42,38,0.1);
+  }
+
+  /* Бірюзова */
+  [data-theme="turquoise"] {
+    --bg: #e0f2f1;
+    --card: #ffffff;
+    --text: #004d40;
+    --text2: #4db6ac;
+    --text3: #80cbc4;
+    --border: #b2dfdb;
+    --accent: #00897b;
+    --good: #26a69a;
+    --bad: #ef5350;
+    --warn: #ffa726;
+    --shadow: 0 2px 16px rgba(0,77,64,0.08);
+    --shadow-hover: 0 6px 24px rgba(0,77,64,0.14);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 20px 16px 48px;
+    transition: var(--transition);
+  }
+
+  .wrap { max-width: 780px; margin: 0 auto; }
+
+  /* Шапка */
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+  }
+  .logo-wrap {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .logo {
+    width: 42px; height: 42px; border-radius: 12px;
+    background: var(--accent); color: var(--card);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; box-shadow: var(--shadow);
+  }
+  .logo-wrap h1 {
+    font-size: 26px; font-weight: 700;
+    letter-spacing: -0.5px; color: var(--text);
+  }
+  .logo-wrap p {
+    font-size: 13px; color: var(--text2); margin-top: 2px;
+  }
+
+  /* Перемикач тем */
+  .theme-bar {
+    display: flex; gap: 6px; align-items: center;
+    background: var(--card); padding: 4px; border-radius: 24px;
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+  }
+  .theme-btn {
+    width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent;
+    cursor: pointer; transition: var(--transition); position: relative;
+  }
+  .theme-btn:hover { transform: scale(1.15); }
+  .theme-btn.active { border-color: var(--text); box-shadow: 0 0 0 2px var(--card), 0 0 0 4px var(--text); }
+  .theme-btn[data-theme="dark-blue"] { background: #1e293b; }
+  .theme-btn[data-theme="light-gray"] { background: #f5f5f7; border-color: #d1d1d6; }
+  .theme-btn[data-theme="cream"] { background: #fffdf8; border-color: #e8e0d6; }
+  .theme-btn[data-theme="turquoise"] { background: #e0f2f1; border-color: #b2dfdb; }
+
+  /* Панель вводу */
+  .input-panel {
+    background: var(--card); border-radius: var(--radius);
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+    padding: 16px; margin-bottom: 24px;
+    display: flex; gap: 10px; align-items: center;
+    transition: var(--transition);
+  }
+  .input-panel:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent), var(--shadow);
+  }
+  .task-input {
+    flex: 1; padding: 12px 14px; font-size: 16px;
+    border: none; border-radius: var(--radius-sm);
+    background: var(--bg); color: var(--text); outline: none;
+    transition: var(--transition);
+  }
+  .task-input::placeholder { color: var(--text3); }
+  .add-btn {
+    padding: 12px 24px; font-size: 15px; font-weight: 600;
+    border: none; border-radius: var(--radius-sm);
+    background: var(--accent); color: #fff;
+    cursor: pointer; transition: var(--transition);
+    white-space: nowrap; display: flex; align-items: center; gap: 6px;
+  }
+  .add-btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
+  .add-btn:active { transform: translateY(0); }
+
+  /* Колонки */
+  .columns {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  }
+  @media (max-width: 640px) { .columns { grid-template-columns: 1fr; } }
+
+  .section {
+    background: var(--card); border-radius: var(--radius);
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+    padding: 16px; transition: var(--transition);
+  }
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    color: var(--text2);
+  }
+  .section-title .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+  .dot-active { background: var(--accent); }
+  .dot-done { background: var(--good); }
+  .count-badge {
+    font-size: 12px; font-weight: 700; padding: 3px 10px;
+    border-radius: 20px; background: var(--bg); color: var(--text2);
+    min-width: 28px; text-align: center;
+  }
+
+  /* Картка завдання */
+  .task-card {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px; border-radius: var(--radius-sm);
+    background: var(--bg); border: 1px solid transparent;
+    margin-bottom: 10px;
+    animation: slideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: var(--transition); position: relative; overflow: hidden;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(12px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .task-card:hover {
+    border-color: var(--border);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+  .task-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px; border-radius: 3px 0 0 3px;
+    background: var(--accent); opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .task-card:hover::before { opacity: 1; }
+
+  .task-emoji {
+    width: 46px; height: 46px; min-width: 46px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; background: var(--card);
+    border: 1px solid var(--border); box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    transition: var(--transition);
+  }
+  .task-card:hover .task-emoji { transform: scale(1.08) rotate(-3deg); }
+
+  .task-body { flex: 1; min-width: 0; }
+  .task-text {
+    font-size: 15px; font-weight: 500; line-height: 1.45;
+    color: var(--text); word-break: break-word;
+    transition: var(--transition);
+  }
+  .task-text.done {
+    text-decoration: line-through;
+    color: var(--text3);
+  }
+  .task-meta {
+    font-size: 11px; color: var(--text3); margin-top: 6px;
+    display: flex; align-items: center; gap: 6px; font-weight: 400;
+    letter-spacing: 0.2px;
+  }
+  .task-meta svg { width: 12px; height: 12px; opacity: 0.6; }
+
+  .task-actions {
+    display: flex; flex-direction: column; gap: 4px;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .task-card:hover .task-actions { opacity: 1; }
+  @media (max-width: 640px) { .task-actions { opacity: 1; } }
+
+  .act-btn {
+    width: 32px; height: 32px; border-radius: 8px; border: none;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; background: var(--card); color: var(--text3);
+    transition: var(--transition); box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .act-btn:hover { transform: scale(1.1); }
+  .act-btn.ok:hover { background: color-mix(in srgb, var(--good) 12%, var(--card)); color: var(--good); }
+  .act-btn.back:hover { background: color-mix(in srgb, var(--warn) 12%, var(--card)); color: var(--warn); }
+  .act-btn.del:hover { background: color-mix(in srgb, var(--bad) 12%, var(--card)); color: var(--bad); }
+
+  .empty-state {
+    text-align: center; padding: 36px 16px; color: var(--text3);
+    font-size: 14px; font-weight: 400;
+  }
+  .empty-state .big-emoji { font-size: 36px; margin-bottom: 8px; display: block; }
+
+  /* Футер */
+  .footer {
+    text-align: center; margin-top: 32px; font-size: 12px;
+    color: var(--text3); letter-spacing: 0.3px;
+  }
+
+  /* Анімація видалення */
+  .removing {
+    animation: removeOut 0.3s ease-in forwards;
+  }
+  @keyframes removeOut {
+    to { opacity: 0; transform: translateX(30px) scale(0.95); height: 0; margin: 0; padding: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="logo-wrap">
+      <div class="logo">✓</div>
+      <div>
+        <h1>Задачник</h1>
+        <p>Керуй своїми справами</p>
+      </div>
+    </div>
+    <div class="theme-bar">
+      <button class="theme-btn" data-theme="light-gray" title="Світло-сіра" onclick="setTheme('light-gray')"></button>
+      <button class="theme-btn" data-theme="dark-blue" title="Темно-синя" onclick="setTheme('dark-blue')"></button>
+      <button class="theme-btn" data-theme="cream" title="Кремова" onclick="setTheme('cream')"></button>
+      <button class="theme-btn" data-theme="turquoise" title="Бірюзова" onclick="setTheme('turquoise')"></button>
+    </div>
+  </div>
+
+  <div class="input-panel">
+    <input type="text" id="in" class="task-input" placeholder="Що потрібно зробити?" maxlength="150" autocomplete="off">
+    <button class="add-btn" onclick="add()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Додати
+    </button>
+  </div>
+
+  <div class="columns">
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title"><span class="dot dot-active"></span> Активні</div>
+        <span class="count-badge" id="c1">0</span>
+      </div>
+      <div id="l1"></div>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title"><span class="dot dot-done"></span> Виконані</div>
+        <span class="count-badge" id="c2">0</span>
+      </div>
+      <div id="l2"></div>
+    </div>
+  </div>
+
+  <div class="footer">Задачник — завдання зберігаються локально</div>
+</div>
+
+<script>
+/* === ДАНІ === */
+let tasks = JSON.parse(localStorage.getItem('tasks_v2') || '[]');
+let nid = tasks.length ? Math.max(...tasks.map(t=>t.id)) + 1 : 1;
+
+/* === ТЕМА === */
+const savedTheme = localStorage.getItem('theme') || 'light-gray';
+document.documentElement.setAttribute('data-theme', savedTheme);
+updateThemeButtons();
+
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('theme', t);
+  updateThemeButtons();
+}
+function updateThemeButtons() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  document.querySelectorAll('.theme-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.theme === cur);
+  });
+}
+
+/* === EMOJI === */
+const kw = {
+  'їжа':'🍽️','обід':'🍽️','сніданок':'🍳','вечеря':'🍲','приготувати':'🍳','кухня':'🍳',
+  'спорт':'🏃','біг':'🏃','тренування':'💪','фітнес':'💪','йога':'🧘','плавання':'🏊',
+  'робота':'💼','звіт':'📊','email':'📧','лист':'📧','зустріч':'🤝','презентація':'📈',
+  'навчання':'📚','книга':'📖','читати':'📖','урок':'📚','екзамен':'📝','диплом':'🎓',
+  'прибирання':'🧹','дом':'🏠','прання':'👕','посуд':'🍽️','пилосос':'🧹',
+  'покупки':'🛒','магазин':'🛒','продукти':'🥦','гроші':'💰','бюджет':'💰',
+  'подорож':'✈️','відпустка':'🏖️','готель':'🏨','білет':'🎫',
+  'здоров':'💊','лікар':'🏥','таблетки':'💊','вітаміни':'💊',
+  'музика':'🎵','пісня':'🎵','гітара':'🎸','концерт':'🎤',
+  'фільм':'🎬','кіно':'🎬','серіал':'📺','ігри':'🎮',
+  'сад':'🌱','рослини':'🌿','квіти':'🌸','дерево':'🌳',
+  'тварин':'🐕','кіт':'🐈','собак':'🐕','рибк':'🐠',
+  'машин':'🚗','авто':'🚗','ремонт':'🔧','бензин':'⛽',
+  'телефон':'📱','комп':'💻','ноут':'💻','сайт':'🌐','код':'💻',
+  'подарунок':'🎁','свято':'🎉','день народження':'🎂','весілля':'💍',
+  'сон':'😴','відпочинок':'🛋️','медитація':'🧘','spa':'💆',
+  'вода':'💧','пиття':'💧','кава':'☕','чай':'🍵',
+  'зуби':'🪥','душ':'🚿','ванна':'🛁',
+  'бігати':'🏃','ходити':'🚶','велосипед':'🚴','піша':'🥾',
+  'англ':'🇬🇧','нім':'🇩🇪','франц':'🇫🇷','іспан':'🇪🇸','мова':'🗣️',
+  'фото':'📷','камера':'📷','відео':'📹','youtube':'▶️',
+  'інстаграм':'📸','телеграм':'✈️','фейсбук':'📘',
+  'банк':'🏦','картка':'💳','платіж':'💳','рахунок':'📄',
+  'документ':'📄','паспорт':'🛂','віза':'🛂','договір':'📋',
+  'податок':'🏛️','страхування':'🛡️','юрист':'⚖️',
+  'дитин':'👶','школа':'🏫','дитсадок':'🧸','іграшк':'🧸',
+  'привітати':'💐','подзвонити':'📞','написати':'✍️','зустріти':'🤗',
+  'заплатити':'💳','позичити':'💰','інвестувати':'📈','крипт':'₿',
+  'подати':'📤','отримати':'📥','відправити':'📨','забрати':'📦',
+  'прийти':'🚪','піти':'🚪','поїхати':'🚗','прилетіти':'✈️',
+  'знайти':'🔍','пошук':'🔍','подивитися':'👀','послухати':'🎧',
+  'погуляти':'🌳','піти в':'🚶','сходити':'🚶','зайти':'🚪',
+  'купити':'🛒','замовити':'📦','забронювати':'🎫','орендувати':'🏠',
+  'виконати':'✅','зробити':'🔨','створити':'✨','налаштувати':'⚙️',
+  'виправити':'🔧','оновити':'🔄','перевірити':'✔️','протестувати':'🧪',
+  'вивчити':'🧠','запам':'🧠','повторити':'🔁','підготувати':'📋',
+  'записати':'📝','зберегти':'💾','скопіювати':'📋','вставити':'📌',
+  'видалити':'🗑️','очистити':'🧹','скинути':'↩️','скасувати':'❌',
+  'почати':'🚀','запустити':'🚀','включити':'🔛','вимкнути':'⭕',
+  'закінчити':'🏁','завершити':'🏁','закрити':'🔒','вийти':'🚪',
+  'подзвонити':'📞','написати':'✉️','надіслати':'📤','ответити':'💬',
+  'запросити':'🎟️','зустріти':'🤝','побачити':'👁️','поговорити':'💬',
+  'подякувати':'🙏','вибачити':'😔','привітати':'🎉','побажати':'🍀',
+  'полюбити':'❤️','подобається':'👍','не подобається':'👎','оцінити':'⭐',
+  'поділитися':'🔗','показати':'👁️','пояснити':'💡','розказати':'🗣️',
+  'попросити':'🙏','вимагати':'📢','наполягати':'💪','переконати':'🎯',
+  'вибрати':'☑️','вирішити':'🧩','визначити':'📍','зрозуміти':'💡',
+  'згадати':'💭','забути':'🤔','здогадатися':'💡','помилитися':'❌',
+  'виграти':'🏆','програти':'😞','змагатися':'🏅','досягти':'🎯',
+  'втратити':'😢','знайти':'🔍','втратити':'💔','врятувати':'🦸',
+  'захистити':'🛡️','атакувати':'⚔️','боротися':'🥊','перемогти':'🏆',
+  'працювати':'💼','відпочивати':'🛋️','веселитися':'🎉','сміятися':'😂',
+  'плакати':'😢','турбуватися':'😟','боятися':'😨','радіти':'😊',
+  'любити':'❤️','ненавидіти':'💔','поважати':'🙇','цінувати':'💎',
+  'вірити':'🙏','сподіватися':'🌈','мріяти':'💭','планувати':'📅',
+  'чекати':'⏳','терпіти':'😤','витримати':'💪','пережити':'🌊',
+  'народитися':'👶','вирости':'🌱','стати':'🦋','жити':'❤️',
+  'померти':'⚰️','воскреснути':'✝️','переродитися':'🔄','змінитися':'🔄',
+  'залишити':'👋','піти':'🚶','прийти':'🚪','повернутися':'↩️',
+  'залишитися':'🏠','чекати':'⏳','знайти':'🔍','загубити':'😵',
+  'врятувати':'🦸','загинути':'💀','вижити':'🌿','продовжити':'➡️',
+  'зупинити':'🛑','почекати':'⏸️','прискорити':'⚡','уповільнити':'🐌',
+  'підняти':'⬆️','опустити':'⬇️','відкрити':'🔓','закрити':'🔒',
+  'збільшити':'📈','зменшити':'📉','подовжити':'↔️','скоротити':'✂️',
+  'обєднати':'🔗','розділити':'✂️','змішати':'🔄','відокремити':'↔️',
+  'замінити':'🔄','оновити':'🆕','відновити':'♻️','відмінити':'❌',
+  'підтвердити':'✅','заперечити':'❌','погодитися':'👍','відмовити':'🚫',
+  'дозволити':'✅','заборонити':'🚫','контролювати':'🎮','керувати':'🎮',
+  'наглядати':'👁️','слідкувати':'👁️','стежити':'👁️','спостерігати':'🔭',
+  'вивчати':'🔬','досліджувати':'🔍','аналізувати':'📊','порівнювати':'⚖️',
+  'вимірювати':'📏','важити':'⚖️','рахувати':'🔢','рахувати':'🧮',
+  'писати':'✍️','читати':'📖','малювати':'🎨','співати':'🎤',
+  'танцювати':'💃','грати':'🎮','гратись':'🧸','розважатися':'🎪',
+  'відпочивати':'🏖️','релаксувати':'🧘','медитувати':'🧘','йогувати':'🧘',
+  'плавати':'🏊','стрибати':'🤸','бігати':'🏃','ходити':'🚶',
+  'їздити':'🚗','літати':'✈️','пливти':'🚢','їхати':'🚂',
+  'стояти':'🧍','сидіти':'🪑','лежати':'🛏️','спати':'😴',
+  'прокидатися':'⏰','вставати':'🌅','вдягатися':'👕','вмиватися':'🧼',
+  'чистити':'🪥','мити':'🚿','готувати':'🍳','їсти':'🍽️',
+  'пити':'🥤','кури':'🚬','алкоголь':'🍷','наркотики':'💉',
+  'лікар':'👨‍⚕️','аптека':'💊','лікарня':'🏥','амбулаторія':'🏥',
+  'операція':'🔪','лікування':'💉','реабілітація':'🏥','одужання':'💪',
+  'захворіти':'🤒','температура':'🌡️','кашель':'😷','нежить':'🤧',
+  'головний біль':'🤕','живіт':'🤢','зубний біль':'🦷','спина':'🦴',
+  'нога':'🦵','рука':'🦾','око':'👁️','вухо':'👂',
+  'нос':'👃','рот':'👄','шкіра':'🧴','волосся':'💇',
+  'нігті':'💅','макіяж':'💄','парфуми':'🌸','одяг':'👗',
+  'взуття':'👟','аксесуари':'💍','ювелірка':'💎','годинник':'⌚',
+  'окуляри':'👓','сонцезахисні':'🕶️','кепка':'🧢','шапка':'🎩',
+  'шарф':'🧣','рукавички':'🧤','пальто':'🧥','куртка':'🧥',
+  'футболка':'👕','штани':'👖','спідниця':'👗','сукня':'👗',
+  'костюм':'🤵','смокінг':'🤵','весільне':'👰','вечірнє':'👗',
+  'спортивне':'🎽','купальник':'👙','нижня білизна':'🩲','піжама':'🌙',
+  'халат':'🥼','форма':'👮','робочий':'👷','військовий':'🪖',
+  'шкільний':'🎒','уніформа':'👔','костюм':'🕴️','наряд':'👘',
+  'косплей':'🦸','маскарад':'🎭','карнавал':'🎉','хелловін':'🎃',
+  'різдво':'🎄','новий рік':'🎆','пасха':'🐰','великдень':'🐣',
+  'травневі':'🌸','день незалежності':'🇺🇦','день конституції':'📜','день пам':'🕯️',
+  'день захисника':'🪖','8 березня':'🌷','23 лютого':'🪖','день матері':'👩',
+  'день батька':'👨','день дитини':'👶','день студента':'🎓','день вчителя':'👨‍🏫',
+  'день медика':'👨‍⚕️','день програміста':'💻','день космонавтики':'🚀','день авіації':'✈️',
+  'день моряка':'⚓','день залізничника':'🚂','день енергетика':'⚡','день гірника':'⛏️',
+  'день будівельника':'🏗️','день аграрія':'🌾','день тварин':'🐾','день землі':'🌍',
+  'день води':'💧','день лісу':'🌳','день океану':'🌊','день космосу':'🌌',
+  'день науки':'🔬','день книги':'📚','день музики':'🎵','день кіно':'🎬',
+  'день театру':'🎭','день музею':'🏛️','день архітектури':'🏛️','день дизайну':'🎨',
+  'день фотографії':'📷','день радіо':'📻','день телебачення':'📺','день інтернету':'🌐',
+  'день пошти':'📮','день друку':'🖨️','день журналіста':'📰','день адвоката':'⚖️',
+  'день поліції':'👮','день пожежника':'🚒','день рятувальника':'🚑','день митника':'🛃',
+  'день податківця':'🏛️','день банкіра':'🏦','день страхувальника':'🛡️','день бухгалтера':'🧮',
+  'день менеджера':'📊','день маркетолога':'📈','день продавця':'🛒','день офіціанта':'🍽️',
+  'день кухаря':'👨‍🍳','день кондитера':'🍰','день бармена':'🍸','день перукаря':'💇',
+  'день косметолога':'💆','день масажиста':'💆','день манікюр':'💅','день тату':'🖊️',
+  'день фітнес':'💪','день йоги':'🧘','день танцю':'💃','день спорту':'🏆',
+  'день футболу':'⚽','день баскетболу':'🏀','день волейболу':'🏐','день тенісу':'🎾',
+  'день хокею':'🏒','день боксу':'🥊','день боротьби':'🤼','день гімнастики':'🤸',
+  'день плавання':'🏊','день веслування':'🚣','день вітрильного':'⛵','день серфінгу':'🏄',
+  'день лиж':'⛷️','день сноуборду':'🏂','день скейтборду':'🛹','день роликів':'🛼',
+  'день велосипеда':'🚴','день мотоспорту':'🏍️','день автоспорту':'🏎️','день картингу':'🏎️',
+  'день гольфу':'⛳','день крикету':'🏏','день бейсболу':'⚾','день софтболу':'🥎',
+  'день регбі':'🏉','день американського футболу':'🏈','день керлінгу':'🥌','день більярду':'🎱',
+  'день боулінгу':'🎳','день дартсу':'🎯','день шахів':'♟️','день шашок':'🎲',
+  'день покеру':'🃏','день казино':'🎰','день лотереї':'🎰','день бінго':'🎱',
+  'подорож':'✈️','відпустка':'🏖️','екскурсія':'🗺️','експедиція':'🧭',
+  'похід':'🥾','кемпінг':'⛺','пікнік':'🧺','барбекю':'🍖',
+  'рибалка':'🎣','полювання':'🏹','збирання грибів':'🍄','ягоди':'🫐',
+  'сафарі':'🦒','круїз':'🚢','курорт':'🏨','спа':'💆',
+  'оздоровлення':'🏥','санаторій':'🏥','профілакторій':'🏥','реабілітація':'🏥',
+  'паломництво':'⛪','екстрим':'🪂','альпінізм':'🧗','спелеологія':'🕳️',
+  'дайвінг':'🤿','снорклінг':'🤿','серфінг':'🏄','віндсерфінг':'🏄',
+  'кайтсерфінг':'🪁','парасейлінг':'🪂','банджі':'🪂','скайдайвінг':'🪂',
+  'парашут':'🪂','планер':'🛩️','дельтаплан':'🪂','параплан':'🪂',
+  'балон':'🎈','дірижабль':'🎈','гелікоптер':'🚁','літак':'✈️',
+  'дрон':'🚁','ракета':'🚀','супутник':'🛰️','мкс':'🛰️',
+  'марс':'🔴','місяць':'🌙','сонце':'☀️','земля':'🌍',
+  'венера':'🌟','меркурій':'☿','юпітер':'🪐','сатурн':'🪐',
+  'уран':'🪐','нептун':'🪐','плутон':'🪐','комета':'☄️',
+  'астероїд':'🌑','метеорит':'☄️','чорна діра':'🕳️','пульсар':'⭐',
+  'квазар':'🌟','галактика':'🌌','туманність':'🌌','сузіря':'⭐',
+  'зорепад':'🌠','полярне сяйво':'🌌','веселка':'🌈','гроза':'⛈️',
+  'блискавка':'⚡','грім':'🌩️','дощ':'🌧️','сніг':'🌨️',
+  'град':'🌨️','туман':'🌫️','вітер':'💨','ураган':'🌪️',
+  'торнадо':'🌪️','цунамі':'🌊','землетрус':'🏚️','виверження':'🌋',
+  'лавина':'🏔️','сель':'🏔️','повінь':'🌊','посуха':'🏜️',
+  'пожежа':'🔥','зсув':'🏔️','обвал':'🏔️','карст':'🕳️',
+  'печера':'🕳️','грот':'🕳️','колодязь':'🕳️','шахта':'⛏️',
+  'карєр':'⛏️','рудник':'⛏️','нафта':'🛢️','газ':'⛽',
+  'вугілля':'⚫','метал':'🔩','руд':'⛏️','мінерал':'💎',
+  'кристал':'💎','дорогоцінний':'💎','напівкоштовний':'💎','органічний':'🦴',
+  'бурштин':'🟡','перли':'⚪','корал':'🪸','янтар':'🟡',
+  'опал':'⚪','бірюза':'🔵','малахіт':'🟢','лазурит':'🔵',
+  'малахіт':'🟢','агат':'⚪','аметист':'🟣','топаз':'🟡',
+  'сапфір':'🔵','рубін':'🔴','смарагд':'🟢','алмаз':'💎',
+  'графіт':'⚫','вуглець':'⚫','кремній':'⚪','залізо':'🔩',
+  'мідь':'🟤','свинець':'🔘','цинк':'⚪','олова':'⚪',
+  'алюміній':'⚪','титан':'⚪','нікель':'⚪','хром':'⚪',
+  'вольфрам':'⚪','молібден':'⚪','ванадій':'⚪','кобальт':'🔵',
+  'платина':'⚪','золото':'🟡','срібло':'⚪','ртуть':'⚪',
+  'уран':'☢️','плутоній':'☢️','торій':'☢️','радій':'☢️',
+  'литій':'⚪','берилій':'⚪','бор':'⚪','азот':'⚪',
+  'кисень':'💨','фтор':'⚪','неон':'🟠','натрій':'⚪',
+  'магній':'⚪','алюміній':'⚪','кремній':'⚪','фосфор':'⚪',
+  'сірка':'🟡','хлор':'🟢','аргон':'🟣','калій':'⚪',
+  'кальцій':'⚪','скандій':'⚪','титан':'⚪','ванадій':'⚪',
+  'хром':'⚪','марганець':'⚪','залізо':'🔩','кобальт':'🔵',
+  'нікель':'⚪','мідь':'🟤','цинк':'⚪','галій':'⚪',
+  'германій':'⚪','арсен':'⚪','селен':'⚪','бром':'🟤',
+  'криптон':'⚪','рубідій':'⚪','стронцій':'⚪','ітрій':'⚪',
+  'цирконій':'⚪','ніобій':'⚪','молібден':'⚪','технецій':'⚪',
+  'рутеній':'⚪','родій':'⚪','паладій':'⚪','срібло':'⚪',
+  'кадімій':'⚪','індій':'⚪','олово':'⚪','сурма':'⚪',
+  'телур':'⚪','йод':'🟣','ксенон':'⚪','цезій':'⚪',
+  'барій':'⚪','лантан':'⚪','церій':'⚪','празеодим':'⚪',
+  'неодим':'⚪','прометій':'⚪','самарій':'⚪','європій':'⚪',
+  'гадоліній':'⚪','тербій':'⚪','диспрозій':'⚪','гольмій':'⚪',
+  'ербій':'⚪','тулій':'⚪','іттербій':'⚪','лютецій':'⚪',
+  'гафній':'⚪','тантал':'⚪','вольфрам':'⚪','рений':'⚪',
+  'осмій':'⚪','ірідій':'⚪','платина':'⚪','золото':'🟡',
+  'ртуть':'⚪','талій':'⚪','свинець':'🔘','вісмут':'⚪',
+  'полоній':'☢️','астат':'☢️','радон':'☢️','францій':'☢️',
+  'радій':'☢️','актиній':'☢️','торій':'☢️','протактиній':'☢️',
+  'уран':'☢️','нептурній':'☢️','плутоній':'☢️','амеріцій':'☢️',
+  'кюрій':'☢️','берклій':'☢️','каліфорній':'☢️','ейнштейній':'☢️',
+  'фермій':'☢️','менделєвій':'☢️','нобелій':'☢️','лоуренсій':'☢️',
+  'рентгеній':'☢️','дубній':'☢️','сіборгій':'☢️','борій':'☢️',
+  'гасій':'☢️','мейтнерій':'☢️','дармштадтій':'☢️','рентгеній':'☢️',
+  'коперніцій':'☢️','ніхоній':'☢️','флеровій':'☢️','московій':'☢️',
+  'ліверморій':'☢️','теннессин':'☢️','оганесон':'☢️'
+};
+
+function emo(t) {
+  const l = t.toLowerCase();
+  for (const [k,v] of Object.entries(kw)) if (l.includes(k)) return v;
+  const d = ['✨','🎯','📌','🔔','⭐','💡','📝','📎','🏷️','🔖','🧩','🎲','🪄','🔮','🎪'];
+  let h = 0; for (let i = 0; i < t.length; i++) h = ((h << 5) - h) + t.charCodeAt(i);
+  return d[Math.abs(h) % d.length];
+}
+
+function save() { localStorage.setItem('tasks_v2', JSON.stringify(tasks)); }
+
+function esc(t) {
+  const d = document.createElement('div'); d.textContent = t; return d.innerHTML;
+}
+
+function kyivTime(ts) {
+  const d = new Date(ts);
+  const pad = n => String(n).padStart(2, '0');
+  return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ' ' + pad(d.getDate()) + '.' + pad(d.getMonth()+1) + '.' + String(d.getFullYear()).slice(-2);
+}
+
+function card(t) {
+  const ok = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  const back = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>';
+  const del = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+  const clock = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+
+  let meta = '';
+  if (t.done && t.completedAt) {
+    meta = `<div class="task-meta">${clock} виконано ${kyivTime(t.completedAt)}</div>`;
+  }
+
+  return `<div class="task-card" data-id="${t.id}">
+    <div class="task-emoji">${t.emoji}</div>
+    <div class="task-body">
+      <div class="task-text ${t.done?'done':''}">${esc(t.text)}</div>
+      ${meta}
+    </div>
+    <div class="task-actions">
+      <button class="act-btn ${t.done?'back':'ok'}" onclick="tog(${t.id})" title="${t.done?'Повернути':'Виконано'}">${t.done?back:ok}</button>
+      <button class="act-btn del" onclick="rem(${t.id})" title="Видалити">${del}</button>
+    </div>
+  </div>`;
+}
+
+function draw() {
+  const a = tasks.filter(t => !t.done);
+  const d = tasks.filter(t => t.done);
+  document.getElementById('c1').textContent = a.length;
+  document.getElementById('c2').textContent = d.length;
+  document.getElementById('l1').innerHTML = a.length ? a.map(card).join('') : '<div class="empty-state"><span class="big-emoji">📝</span>Поки що пусто</div>';
+  document.getElementById('l2').innerHTML = d.length ? d.map(card).join('') : '<div class="empty-state"><span class="big-emoji">🏆</span>Ще нічого не виконано</div>';
+}
+
+function add() {
+  const i = document.getElementById('in');
+  const v = i.value.trim();
+  if (!v) return;
+  tasks.unshift({id: nid++, text: v, emoji: emo(v), done: false, createdAt: Date.now()});
+  i.value = '';
+  save(); draw();
+}
+
+function tog(id) {
+  const t = tasks.find(x => x.id === id);
+  if (t) {
+    t.done = !t.done;
+    if (t.done) t.completedAt = Date.now();
+    else delete t.completedAt;
+    save(); draw();
+  }
+}
+
+function rem(id) {
+  const el = document.querySelector(`.task-card[data-id="${id}"]`);
+  if (el) {
+    el.classList.add('removing');
+    setTimeout(() => {
+      tasks = tasks.filter(x => x.id !== id);
+      save(); draw();
+    }, 280);
+  } else {
+    tasks = tasks.filter(x => x.id !== id);
+    save(); draw();
+  }
+}
+
+document.getElementById('in').addEventListener('keydown', e => { if (e.key === 'Enter') add(); });
+draw();
+</script>
+</body>
+</html>
